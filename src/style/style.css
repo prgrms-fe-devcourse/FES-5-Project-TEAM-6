@@ -15,3 +15,5 @@
 @import "swiper/css/free-mode";
 
 @import "./components/_index.css";
+
+@import "./sweetAlert.css";

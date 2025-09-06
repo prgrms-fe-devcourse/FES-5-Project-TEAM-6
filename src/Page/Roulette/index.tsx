@@ -13,6 +13,7 @@ import { extendItem } from "./utils/extendItem";
 import { useAuthStore } from "@/store/useAuthStore";
 import { BsShuffle } from "react-icons/bs";
 import RouletteSkeleton from "./Components/RouletteSkeleton";
+import { showInfoAlert } from "@/Components/sweetAlert";
 
 export interface SearchParam {
   key: string;
@@ -63,12 +64,25 @@ function RandomRoulette() {
   // 4. 필터별 api에 전달할 파라미터 가공
   const params = useMemo(() => {
     const p: Record<string, string> = {};
-    if (kdc !== undefined) p.kdc = kdc;
-    if (dtl_kdc !== undefined) p.dtl_kdc = dtl_kdc;
-    if (ageKey) p.age = ageKey;
-    if (genderKey && genderKey !== "all" && genderKey !== "bookmark") p.gender = String(genderKey);
-    return p;
-  }, [kdc, dtl_kdc, ageKey, genderKey]);
+    switch (filterTap) {
+      case "장르": {
+        if (kdc !== undefined) p.kdc = kdc;
+        if (dtl_kdc !== undefined) p.dtl_kdc = dtl_kdc;
+        return p;
+      }
+      case "연령": {
+        if (ageKey) p.age = ageKey;
+        return p;
+      }
+      case "추천": {
+        if (genderKey && genderKey !== "all" && genderKey !== "bookmark") p.gender = String(genderKey);
+        return p;
+      }
+      default:
+        return p;
+    }
+  }, [filterTap, kdc, dtl_kdc, ageKey, genderKey]);
+  console.log(params);
 
 
   // 5. 룰렛에 뿌릴 데이터 가져오기
@@ -113,11 +127,9 @@ function RandomRoulette() {
   useEffect(() => {
     if (!isBookmarkSelect) return;
     if (isSuccess && !isFetching && (bookmarkList?.length ?? 0) === 0) {
-      // sweetalert로 바꾸기
-      alert('북마크가 존재하지 않습니다. 전체 데이터를 불러옵니다');
+      showInfoAlert('북마크가 존재하지 않습니다', '인기작을 불러옵니다')
     }
   }, [isBookmarkSelect, isSuccess, isFetching, bookmarkList]);
-
 
   return (
     <div className="relative w-full max-w-[1200px] h-[calc(100vh-80px)] min-h-[900px] mx-auto justify-items-center pt-17 py-2">
@@ -133,10 +145,8 @@ function RandomRoulette() {
             bottomItems={filterTap === "장르" ? bottomItems : null}
             filterItem={genre}
             setFilterItem={setGenre}
-            onClose={() => {
-              setFilterTap(null);
-            }}
-            className={"absolute sm:p-10 p-5"}
+            setFilterTap={setFilterTap}
+            className={"absolute sm:p-8 p-5"}
             styleTopItems={'text-xs sm:text-[16px]'}
             styleBottomTotal={'text-sm sm:text-[16px]'}
             styleBottomItems={'text-xs sm:text-[16px] pt-1 sm:pt-0'}
@@ -154,7 +164,7 @@ function RandomRoulette() {
               setAgeKey(key);
               setIsBookmarkSelect(false);
             }}
-            onClose={() => setFilterTap(null)}
+            setFilterTap={setFilterTap}
             category={{
               8: "초등",
               14: "청소년",
@@ -162,7 +172,7 @@ function RandomRoulette() {
               30: "30대",
               40: "40대",
               50: "50대",
-              60: "60대 이상", // 60대 이상 ui 변경 필요
+              60: "60대 이상",
             }}
           />
         </div>
@@ -178,7 +188,7 @@ function RandomRoulette() {
               setGenderKey(key);
               setIsBookmarkSelect(key === "bookmark");
             }}
-            onClose={() => setFilterTap(null)}
+            setFilterTap={setFilterTap}
             category={
               user ?
                 {

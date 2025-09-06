@@ -1,11 +1,11 @@
 import type { BookDetailData } from "@/api/useBookDetail";
 import { useSetReviewWithFiles } from "@/api/useReviewFetching";
 import RatingStars from "@/Components/RatingStar";
+import { showInfoAlert } from "@/Components/sweetAlert";
 import { useProfileStore } from "@/store/useProfileStore";
 import { setFilePreview } from "@/utils/setFilePreview";
 import React, { useId, useState } from "react";
 import { BiImageAdd } from "react-icons/bi";
-import Swal from "sweetalert2";
 
 interface Props {
   data: BookDetailData | undefined;
@@ -27,15 +27,18 @@ function ReviewWritePartition({ data }: Props) {
     e.preventDefault();
 
     if (!id) {
-      Swal.fire(
+      showInfoAlert(
         "로그인 필요",
-        "<div>리뷰는 로그인 후에 작성하실 수 있습니다.</div>"
-      );
+        "리뷰는 로그인 후에 작성하실 수 있습니다"
+      )
       return;
     }
 
     if (rating === 0) {
-      Swal.fire("평점 입력 필요", "<div>평점을 입력해주세요</div>");
+      showInfoAlert(
+        "평점 입력 필요",
+        "평점을 입력해주세요"
+      )
       return;
     }
 
@@ -64,7 +67,7 @@ function ReviewWritePartition({ data }: Props) {
       setImage(file);
       setFilePreview(file, setImagePreview);
     } else {
-      Swal.fire("오류", "유효하지 않은 파일입니다.");
+      showInfoAlert("오류", "유효하지 않은 파일입니다.");
     }
   };
 

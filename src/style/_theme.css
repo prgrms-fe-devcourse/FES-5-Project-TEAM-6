@@ -11,11 +11,12 @@
   --color-gray-50: #f0f0f0ff;
   --animate-arrow-rise: arrow-rise 1.2s ease-in-out infinite;
   --animate-arrow-up: arrow-up 2s ease-in-out infinite;
-  --animate-form-right-lg: form-right-lg 2s forwards;
-  --animate-form-right-md: form-right-md 2s forwards;
-  --animate-form-right-sm: form-right-sm 2s forwards;
+  --animate-form-right-lg: form-right-lg 1.3s forwards;
+  --animate-form-right-md: form-right-md 1.3s forwards;
+  --animate-form-right-sm: form-right-sm 1.3s forwards;
   --animate-shimmer: shimmer 1.2s linear infinite;
   --shadow-sm: 1px 1px 5px 0 #b7b7b7;
+  --shadow-pin : 4px 10px 3px rgba(85,85,85,0.9);
   --shadow-md: 3px 3px 3px 0 #b7b7b7;
   --shadow-book: 4px 10px 10px 0 rgba(85, 85, 85, 0.9);
   --shadow-book-pick: 4px 10px 30px 0 #e0ab0f;

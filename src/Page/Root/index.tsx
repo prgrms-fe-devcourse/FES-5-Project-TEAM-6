@@ -11,9 +11,15 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useQueryClient } from "@tanstack/react-query";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import MissionCompletePopup from "./Components/MissionCompletePopup";
-// import type { Tables } from "@/@types/database.types";
 
-// 기본 레이아웃 구조 정의. 모달, floating Button등 Zustand를 통해 제어
+
+type RewardPayload = {
+  id: string;
+  template_id: string;
+  scope_id: string | null;
+}
+
+
 function Root() {
   const scrollTopButtonVisible = useRootUIShellStore(
     (s) => s.scrollTopButtonVisible
@@ -23,10 +29,10 @@ function Root() {
   const user = useAuthStore((s) => s.user);
   const queryClient = useQueryClient();
   const channelRef = useRef<RealtimeChannel | null>(null);
-  const [missionCompletePopup, setMissionCompletePopup] = useState<boolean>(false);
-  const [missionTemplateID, setMissionTemplateID] = useState<string | null>(null);
-  const [isbn13, setISBN13] = useState<string | null>(null);
-  // const scopeRef = useRef("");
+
+  const [queue, setQueue] = useState<RewardPayload[]>([]);
+  const [currentCompleteMission, setCurrentCompleteMission] = useState<RewardPayload | null>(null);
+  const handleIDs = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     if (!user?.id) return;
@@ -41,14 +47,17 @@ function Root() {
           filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
+
+          const payloadData = payload.new as RewardPayload;
+          console.log('payloadData ID : ', payloadData.id);
+
+          if (handleIDs.current.has(payloadData.id)) return;
+          handleIDs.current.add(payloadData.id);
+
+          setQueue(q => [...q, payloadData]);
+
           queryClient.invalidateQueries({ queryKey: ["rewards", user.id] });
           queryClient.invalidateQueries({ queryKey: ["missions", user.id] });
-          console.log(payload.new, "완료");
-          // const item = payload.new as Tables<"task_rewards">;
-          // scopeRef.current = item.scope_id ?? "";
-          setMissionTemplateID(payload.new.template_id);
-          setMissionCompletePopup(true);
-          setISBN13(payload.new.scope_id)
         }
       )
       .subscribe();
@@ -64,14 +73,22 @@ function Root() {
   }, [user?.id, queryClient]);
 
 
-  const handleClosePopup = async () => {
-    // const scope_id = scopeRef.current
 
-    // if (scope_id)
-    if (isbn13)
+  useEffect(() => {
+    // 현재 완료 팝업이 없고 큐에 쌓인게 있는 경우
+    if (!currentCompleteMission && queue.length > 0) {
+      setCurrentCompleteMission(queue[0]);
+      setQueue(q => q.slice(1));
+    }
+
+  }, [currentCompleteMission, queue.length])
+
+
+  const handleClosePopup = async () => {
+    const isbn13 = currentCompleteMission?.scope_id ?? null;
+    if (isbn13) {
       await Promise.all([
         queryClient.invalidateQueries({
-          // queryKey: ["missions", "book", scope_id],
           queryKey: ["missions", "book", isbn13],
           refetchType: "all",
         }),
@@ -80,25 +97,26 @@ function Root() {
           refetchType: "all",
         }),
       ]);
+    } else {
+      // achievement는 scope_id가 없어서 예외처리
+      await queryClient.invalidateQueries({
+        queryKey: ["rewards", user?.id],
+        refetchType: "all",
+      });
+    }
 
-    setMissionCompletePopup(false);
-    setMissionTemplateID(null);
+    setCurrentCompleteMission(null);
   };
 
 
   return (
-    <div className={
-      missionCompletePopup
-        ? "min-h-screen w-full h-screen overflow-hidden"
-        : "min-h-screen w-full"
-    }>
+    <div className="min-h-screen w-full">
       {
-        missionCompletePopup && missionTemplateID &&
-        isbn13 &&
+        currentCompleteMission && currentCompleteMission.template_id &&
         <MissionCompletePopup
-          isbn13={isbn13}
-          missionCompletePopup={missionCompletePopup}
-          missionTemplateID={missionTemplateID}
+          isbn13={currentCompleteMission.scope_id ?? ''}
+          missionCompletePopup={true}
+          missionTemplateID={currentCompleteMission.template_id}
           onClose={handleClosePopup} />
       }
 

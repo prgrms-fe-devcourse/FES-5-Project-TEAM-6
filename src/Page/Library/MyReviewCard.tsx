@@ -1,9 +1,9 @@
 import { useDeleteReview, useUpdateReview } from "@/api/useReviewFetching";
 import RatingStars from "@/Components/RatingStar";
+import { showWarningAlert } from "@/Components/sweetAlert";
 import { useState, type FC } from "react";
 import { BiImageAdd } from "react-icons/bi";
 import { useNavigate, createSearchParams } from "react-router-dom";
-import Swal from "sweetalert2";
 
 export type MyReviewCardData = {
   id: number;
@@ -52,21 +52,18 @@ const MyReviewCard: FC<{ data: MyReviewCardData }> = ({ data }) => {
     setIsEditing(false);
   };
 
-const handleDelete = () => {
-  Swal.fire({
-    title: "정말 삭제하시겠습니까?",
-    text: "리뷰 기록은 복구되지 않습니다.",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "네, 삭제합니다",
-    cancelButtonText: "취소",
-    reverseButtons: true,  
-  }).then((result) => {
-    if (result.isConfirmed) {
-      deleteReview.mutate(data.id);
-    }
-  });
-};
+  const handleDelete = () => {
+    showWarningAlert(
+      "정말 삭제하시겠습니까?",
+      "리뷰 기록은 복구되지 않습니다.",
+      "네, 삭제합니다",
+      "취소",
+    ).then((result) => {
+      if (result.isConfirmed) {
+        deleteReview.mutate(data.id);
+      }
+    });
+  };
 
   const goDetail = () => {
     if (isEditing) return;

@@ -36,7 +36,7 @@ function RouletteSkeleton() {
 
   return (
     <>
-      <img ref={pinRef} className="absolute bottom-125 z-[9]" src="/pin.svg" alt="룰렛 핀" />
+      <img ref={pinRef} className="absolute bottom-125 z-[9] drop-shadow-[var(--shadow-pin)]" src="/pin.svg" alt="룰렛 핀" />
 
       <div className="wrapper absolute bottom-0 w-full h-[550px] overflow-hidden flex flex-row items-center justify-center">
         <div ref={wheelRef} className="wheel absolute top-30 w-[1000px] h-[1000px] origin-[50%_50%]">
@@ -53,7 +53,7 @@ function RouletteSkeleton() {
                   bg-[linear-gradient(110deg,#EAEAEA_25%,#f5f5f5_37%,#EAEAEA_63%)]
                   bg-[length:200%_100%] animate-shimmer"
               >
-                <img className="w-fit h-fit object-cover" src='/pickitbook_logo.svg' alt='표지' />
+                <img className="w-fit h-fit object-contain" src='/pickitbook_logo.svg' alt='표지' />
               </button>
             ))}
         </div>

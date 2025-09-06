@@ -4,10 +4,10 @@ import { useGetReplyByParentId } from "@/api/useReviewReplyFetching";
 import RatingStars from "@/Components/RatingStar";
 import { timeFormatter } from "@/utils/timeFormatter";
 import React, { useEffect, useRef, useState } from "react";
-import Swal from "sweetalert2";
 import profileDefault from "@/assets/profile_default.png";
 import loadingImg from "@/assets/loading.svg";
 import { type UseMutateFunction } from "@tanstack/react-query";
+import { showInfoAlert, showWarningAlert } from "@/Components/sweetAlert";
 import tw from "@/utils/tw";
 
 type ReplyVars = { content: string; parent_id: number };
@@ -81,14 +81,12 @@ function ReviewItem({
   };
 
   const handleDelete = () => {
-    Swal.fire({
-      title: "정말 삭제하시겠습니까?",
-      text: "리뷰 기록은 복구되지 않습니다.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "네, 삭제합니다",
-      cancelButtonText: "취소",
-    }).then((result) => {
+    showWarningAlert(
+      "정말 삭제하시겠습니까?",
+      "리뷰 기록은 복구되지 않습니다.",
+      "네, 삭제합니다",
+      "취소",
+    ).then((result) => {
       if (result.isConfirmed) {
         deleteReviewCallback(item.id);
       }
@@ -151,10 +149,10 @@ function ReviewItem({
             onClick={() => {
               // 없으면 undefined, 있으면 isAnonymous=false네 ㅋㅋ;
               if (isAnonymous === undefined)
-                Swal.fire(
+                showInfoAlert(
                   "로그인 필요",
-                  "<div>로그인 이후에 이용할 수 있습니다.</div>"
-                );
+                  "로그인 이후에 이용할 수 있습니다"
+                )
               else mutate();
             }}
           >

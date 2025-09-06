@@ -327,10 +327,9 @@ function RouletteWheel({
   const inactiveStyle = "img absolute top-0 left-0 h-50 w-33 rounded-2xl transition-all shadow-book"
   const isActiveContext = prevBooksArrange === acitveStyleCondition
 
-
   return (
     <>
-      <img ref={pinRef} className="absolute bottom-125 z-[9]" src="/pin.svg" alt="룰렛 핀" />
+      <img ref={pinRef} className="absolute bottom-125 z-[9] drop-shadow-[var(--shadow-pin)]" src="/pin.svg" alt="룰렛 핀" />
 
       <div className="wrapper absolute bottom-0 w-full h-[550px] overflow-hidden flex flex-row items-center justify-center">
         <div ref={wheelRef} className="wheel absolute top-30 w-[1000px] h-[1000px] origin-[50%_50%]">

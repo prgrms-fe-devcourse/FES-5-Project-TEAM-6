@@ -21,7 +21,7 @@ interface Props {
   isOpen: boolean;
   selectedKey?: string | null;
   onSelect?: (key: string) => void;
-  onClose: () => void;
+  setFilterTap: React.Dispatch<React.SetStateAction<"장르" | "연령" | "추천" | null>>
 }
 
 function FilterModal({
@@ -30,7 +30,7 @@ function FilterModal({
   category,
   selectedKey,
   onSelect,
-  onClose,
+  setFilterTap,
 }: Props) {
   // 필터 선택값 전달
   const handleSelect = (key: string) => {
@@ -46,12 +46,15 @@ function FilterModal({
     if (!isOpen) return;
     const onPointerDown = (e: PointerEvent) => {
       const t = e.target as Node;
+      // 필터 대분류 버튼을 외부로 인식하지 않게 하기 위해 예외처리
+      if ((e.target as Element)?.closest('[data-filter-trigger]')) return;
+      // 모달 내부를 클릭할때는 외부로 인식하지 않게 예외처리
       if (panelRef.current && panelRef.current.contains(t)) return;
-      onClose();
+      setFilterTap(null);
     };
     document.addEventListener("pointerdown", onPointerDown, true);
     return () => document.removeEventListener("pointerdown", onPointerDown, true);
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   // 필터탭을 눌렀을때만 보임처리
   if (!isOpen) return null;

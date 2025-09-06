@@ -8,8 +8,8 @@ import { bookmarkRepo } from "@/api/bookmark.repo.supabase";
 import BookmarkButton from "./BookmarkButton";
 import { useAssignMissions } from "@/api/useMissionsFetching";
 import { useAuthStore } from "@/store/useAuthStore";
-import Swal from "sweetalert2";
 import tw from "@/utils/tw";
+import { showInfoAlert } from "@/Components/sweetAlert";
 
 interface Props {
   data: BookDetailData | undefined;
@@ -52,7 +52,7 @@ function BookDataPatition({
 
   const handleToggleBookmark = () => {
     if (!isLogIn) {
-      Swal.fire("로그인 필요", "북마크하기 위해서는 로그인해야 합니다.");
+      showInfoAlert('로그인 필요', '북마크하기 위해서는 로그인해야 합니다')
       return;
     }
     toggleBookmark();

@@ -13,6 +13,7 @@ import { getBookImageURLs } from "@/utils/bookImageUtils";
 import tw from "@/utils/tw";
 import { cva } from "class-variance-authority";
 import { useEffect, useMemo, useState } from "react"
+import { NavLink } from "react-router-dom";
 
 interface Props {
   pickBook: PopularBookItem | BookmarkItem | null;
@@ -234,10 +235,19 @@ function PickBook({ pickBook, isOpenPickBook, setIsOpenPickBook }: Props) {
                           }
 
                         </div>
+
+                        <div className="absolute hidden text-sm sm:flex bottom-5 right-9">
+                          <NavLink to={`/book_detail/?isbn13=${bookData.book.isbn13}`}>
+                            <button className="w-fit flex gap-2" title={`${bookData.book.bookname} 상세 페이지로 이동`}>
+                              <img className="w-[18px] h-[18px]" src="/magnifier.png" alt="상세 페이지로 이동" />
+                              책 보러가기
+                            </button>
+                          </NavLink>
+                        </div>
                       </div>
 
                       {/* 2. 책 왼쪽 영역 (책 상세 정보 영역) */}
-                      <div className={tw(openBook({ intent: 'pageLeft', isOpen }), "pt-10 sm:pt-13 pb-9 px-9", "pageLeft")}>
+                      <div className={tw(openBook({ intent: 'pageLeft', isOpen }), "pt-15 sm:pt-13 pb-9 px-9", "pageLeft")}>
                         {/* 2-1. 책 표지 여닫는 버튼 */}
                         <div className="absolute bottom-[8px] sm:bottom-[11px] right-[9px] sm:right-[11px] w-10 h-10 sm:w-14 sm:h-14 rotate-135 bg-pattern z-10"></div>
                         <button onClick={handleOpenBook} className="absolute bottom-0 right-0 w-7 h-7 sm:w-10 sm:h-10 bg-gray-700"></button>
@@ -246,7 +256,7 @@ function PickBook({ pickBook, isOpenPickBook, setIsOpenPickBook }: Props) {
                         <div className="rotate-x-180 sm:-rotate-z-180 flex flex-col gap-2">
 
                           {/* 2-2-1. 책 이름 */}
-                          <p className="font-semibold text-lg md:text-xl lg:text-2xl text-primary-black">{bookData.book.bookname}</p>
+                          <p className="font-semibold text-lg md:text-xl lg:text-2xl text-primary-black pr-5 sm:pr-0">{bookData.book.bookname}</p>
 
                           {/* 2-2-2. 책 평점 */}
                           <RatingStars value={ratingAvg ? ratingAvg : 0} size={28} gap={2} />
@@ -268,6 +278,14 @@ function PickBook({ pickBook, isOpenPickBook, setIsOpenPickBook }: Props) {
                             <p className="text-xs lg:text-sm xl:text-[16px] line-clamp-[7] lg:line-clamp-[12]">
                               {bookData.book.description}
                             </p>
+                          </div>
+                          <div className="absolute -bottom-10 right-0 text-xs sm:hidden">
+                            <NavLink to={`/book_detail/?isbn13=${bookData.book.isbn13}`}>
+                              <button className="w-fit flex gap-1" title={`${bookData.book.bookname} 상세 페이지로 이동`}>
+                                <img className="w-4 h-4" src="/magnifier.png" alt="상세 페이지로 이동" />
+                                책 보러가기
+                              </button>
+                            </NavLink>
                           </div>
                         </div>
                       </div>

@@ -1,0 +1,17 @@
+.my-swal-popup {
+  border-radius: 21px !important;
+  background: url("/public/background.jpg");
+}
+
+/* alert창의 확인 버튼 스타일 */
+.my-confirm-button {
+  border-radius: 12px !important;
+  padding: 8px 20px;
+  font-weight: 600;
+}
+
+/* 아이콘 배경 스타일 */
+.custom-icon-background .swal2-icon-content {
+  position: relative;
+  z-index: 2;
+}

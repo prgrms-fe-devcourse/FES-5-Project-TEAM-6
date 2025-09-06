@@ -1,5 +1,4 @@
 import React, { useId, useRef, useState } from "react";
-import Swal from "sweetalert2";
 import { BiSearch } from "react-icons/bi";
 import type { SearchKey } from "@/@types/global";
 import Filter from "@/Components/Filter";
@@ -10,6 +9,7 @@ import {
 } from "react-icons/md";
 import gsap from "gsap";
 import tw from "@/utils/tw";
+import { showInfoAlert } from "@/Components/sweetAlert";
 
 interface Props {
   onSearch: ({ key, value }: { key: SearchKey; value: string }) => void;
@@ -98,7 +98,7 @@ function SearchForm({ onSearch, initialValue, disabled }: Props) {
     const v = value.trim();
 
     if (!v) {
-      Swal.fire("검색어를 입력해주세요.");
+      showInfoAlert('검색어를 입력해주세요')
       return;
     }
 
@@ -171,7 +171,7 @@ function SearchForm({ onSearch, initialValue, disabled }: Props) {
           value={value}
         />
         <button type="submit" className="cursor-pointer">
-          <BiSearch size={32} className="text-primary"/>
+          <BiSearch size={32} className="text-primary" />
         </button>
       </form>
     </div>

@@ -6,7 +6,7 @@ import tw from "@/utils/tw";
 
 interface Props {
   stylefire?: string;
-  styleWrraper?: string;     
+  styleWrraper?: string;
   styleNickname?: string;
   styleMissionCount?: string;
   styleMiddle?: string;
@@ -17,15 +17,15 @@ interface Props {
 }
 
 export default function Progress({
-  stylefire = "",
-  styleWrraper = "",
-  styleNickname = "",
-  styleMissionCount = "",
-  styleMiddle = "",
-  styleLevel = "",
-  styleProgress = "",
-  styleTrophy = "",
-  styleTop = "",
+  stylefire,
+  styleWrraper,
+  styleNickname,
+  styleMissionCount,
+  styleMiddle,
+  styleLevel,
+  styleProgress,
+  styleTrophy,
+  styleTop,
 }: Props) {
   const { user } = useAuthStore();
   const { nickname, fetchUser } = useProfileStore();
@@ -123,7 +123,7 @@ export default function Progress({
         </div>
 
         {/* RIGHT */}
-        <div className="flex hidden md:flex flex-col items-end gap-2 shrink-0">
+        <div className="hidden md:flex flex-col items-end gap-2 shrink-0">
           <div className={tw("text-sm text-gray-700", styleMissionCount)}>
             미션 {completedCount}개 클리어
           </div>
